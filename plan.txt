@@ -1,0 +1,4 @@
+Route for the list page: /suppliers
+Route for the detail page: /suppliers/{id}
+Controller: SuppliersController
+View: resources/views/suppliers/index.blade.php and show.blade.php

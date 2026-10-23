@@ -1,6 +1,5 @@
 <?php
 namespace App\Http\Controllers;
-
 class ProductController extends Controller
 {
     private function getProducts()
@@ -13,19 +12,21 @@ class ProductController extends Controller
     }
 
     public function index()
-    {
-        return $this->getProducts();
-    }
+{
+    $products = $this->getProducts();
 
-    public function show($id)
-    {
-        $products = $this->getProducts();
-
-        if (!isset($products[$id])) {
-            abort(404);
-        }
-    
-
-        return $products[$id];
-    }
+    return view('products.index', ['products' => $products]);
 }
+
+public function show($id)
+{
+    $products = $this->getProducts();
+
+    if (!isset($products[$id])) {
+        abort(404);
+    }
+
+    return view('products.show', ['product' => $products[$id]]);
+}
+}
+
