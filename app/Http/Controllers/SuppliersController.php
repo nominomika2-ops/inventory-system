@@ -6,13 +6,13 @@ class SuppliersController extends Controller
     private $suppliers = [
         1 => [
             'id' => 1,
-            'name' => 'Nom supplier',
-            'email' => 'NOMTOM@example.com',
+            'name' => 'Nomsupplier',
+            'email' => 'NOMTOMsupplier@example.com',
             'phone' => '0776736218',
         ],
         2 => [
             'id' => 2,
-            'name' => 'Tominton Global',
+            'name' => ' TomiGlobal',
             'email' => 'tomiglobal@example.com',
             'phone' => '0779876543',
         ],
