@@ -8,14 +8,15 @@
 
     @foreach ($products as $product)
         <div>
-            <h3>{{ $product['name'] }}</h3>
-            <p>Stock: {{ $product['stock'] }}</p>
+            <h3>{{ $product->name }}</h3>
+            <p>Stock: {{ $product->stock }}</p>
+            <p>Price: {{ $product->price }}</p>
+            <p>Category: {{ $product->category?->name ?? 'No category assigned' }}</p>
 
-            <a href="{{ route('products.show', $product['id']) }}">
+            <a href="{{ route('products.show', $product->id) }}">
                 View Details
             </a>
         </div>
         <hr>
     @endforeach
 @endsection
-

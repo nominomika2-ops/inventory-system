@@ -29,4 +29,6 @@ Route::get('/suppliers', [SuppliersController::class, 'index'])
 
 Route::get('/suppliers/{id}', [SuppliersController::class, 'show'])
     ->name('suppliers.show');
+Route::get('/categories', [CategoryController::class, 'index'])
+    ->name('categories.index');
 
