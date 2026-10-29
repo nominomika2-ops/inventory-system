@@ -1,39 +1,55 @@
-
+blade
 @extends('layouts.app')
 
 @section('title', 'Product Details')
 
 @section('content')
-    <div class="product">
+    <div class="container mt-4">
         <h1>Product Details</h1>
 
-        <h3>{{ $product->name }}</h3>
-
-        <p>Product ID: {{ $product->id }}</p>
-
-        <p>Available Stock: {{ $product->stock }}</p>
-
-        <p>Price: {{ $product->price }}</p>
+        <p><strong>ID:</strong> {{ $product->id }}</p>
+        <p><strong>Name:</strong> {{ $product->name }}</p>
+        <p><strong>Price:</strong> {{ $product->price }}</p>
+        <p><strong>Stock:</strong> {{ $product->stock }}</p>
 
         <p>
-            Category: {{ $product->category?->name ?? 'No category assigned' }}
+            <strong>Category:</strong>
+            {{ $product->category?->name ?? 'No category assigned' }}
         </p>
-        
-@if ($product->detail)
-    <h3>Product Additional Details</h3>
 
-    <p>Barcode: {{ $product->detail->barcode }}</p>
+        <hr>
 
-    <p>
-        Description:
-        {{ $product->detail->description ?? 'No description available' }}
-    </p>
-@else
-    <p>No detail yet</p>
-@endif
+        <h3>Product Additional Details</h3>
 
+        @if ($product->detail)
+            <p><strong>Barcode:</strong> {{ $product->detail->barcode }}</p>
+            <p>
+                <strong>Description:</strong>
+                {{ $product->detail->description ?? 'No description available' }}
+            </p>
+        @else
+            <p>No additional details available.</p>
+        @endif
 
-        <a class="btn" href="{{ route('products.index') }}">
+        <hr>
+
+        <h3>Suppliers</h3>
+
+        @if ($product->suppliers->isNotEmpty())
+            <ul>
+                @foreach ($product->suppliers as $supplier)
+                    <li>
+                        <a href="{{ route('suppliers.show', $supplier->id) }}">
+                            {{ $supplier->name }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        @else
+            <p>No suppliers assigned.</p>
+        @endif
+
+        <a href="{{ route('products.index') }}" class="btn btn-primary">
             Back to Products
         </a>
     </div>

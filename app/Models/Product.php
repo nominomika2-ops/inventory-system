@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Supplier;
 
 class Product extends Model
 {
@@ -20,8 +22,8 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function detail()
+    public function suppliers()
     {
-        return $this->hasOne(ProductDetail::class);
+        return $this->belongsToMany(Supplier::class);
     }
 }

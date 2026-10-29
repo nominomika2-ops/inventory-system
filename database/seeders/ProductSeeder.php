@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Product;
+use App\Models\Supplier;
 
 class ProductSeeder extends Seeder
 {
@@ -20,5 +21,13 @@ class ProductSeeder extends Seeder
             ->create([
                 'stock' => 0,
             ]);
+
+        $suppliers = Supplier::all();
+
+        Product::all()->each(function ($product) use ($suppliers) {
+            $product->suppliers()->attach(
+                $suppliers->random(rand(1, 3))->pluck('id')
+            );
+        });
     }
 }
