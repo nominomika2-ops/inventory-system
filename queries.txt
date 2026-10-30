@@ -1,0 +1,12 @@
+Laravel N+1 Query Test Results
+
+Page / Test                         Before    After
+Products - Category                 21        2
+Categories - Products               6         2
+Products - Category + Suppliers     22        3
+Low Stock - Query Builder           N/A       1
+
+Conclusion:
+Eager loading was used to reduce unnecessary database queries.
+The N+1 query problem was fixed using with().
+The Low Stock page executed one query.

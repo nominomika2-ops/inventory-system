@@ -9,9 +9,14 @@
     @foreach ($products as $product)
         <div>
             <h3>{{ $product->name }}</h3>
+
             <p>Stock: {{ $product->stock }}</p>
+
             <p>Price: {{ $product->price }}</p>
-            <p>Category: {{ $product->category?->name ?? 'No category assigned' }}</p>
+
+            <p>Category: {{ $product->category->name }}</p>
+
+            <p>Suppliers: {{ $product->suppliers->pluck('name')->join(', ') }}</p>
 
             <a href="{{ route('products.show', $product->id) }}">
                 View Details
@@ -19,4 +24,6 @@
         </div>
         <hr>
     @endforeach
+
+    
 @endsection

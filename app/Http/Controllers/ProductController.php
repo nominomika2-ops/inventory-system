@@ -9,16 +9,20 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with(['category', 'suppliers'])->get();
 
-        return view('products.index', ['products' => $products]);
+        return view('products.index', [
+            'products' => $products
+        ]);
     }
 
     public function show($id)
     {
         $product = Product::findOrFail($id);
 
-        return view('products.show', ['product' => $product]);
+        return view('products.show', [
+            'product' => $product
+        ]);
     }
 
     public function lowStock()
@@ -28,6 +32,8 @@ class ProductController extends Controller
             ->orderBy('stock')
             ->get();
 
-        return view('products.low-stock', ['products' => $products]);
+        return view('products.low-stock', [
+            'products' => $products
+        ]);
     }
 }

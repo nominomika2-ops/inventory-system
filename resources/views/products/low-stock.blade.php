@@ -1,4 +1,3 @@
-blade
 @extends('layouts.app')
 
 @section('title', 'Low Stock Products')
@@ -42,5 +41,6 @@ blade
         <a href="{{ route('products.index') }}" class="btn btn-primary">
             Back to Products
         </a>
+
     </div>
 @endsection
