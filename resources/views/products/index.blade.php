@@ -14,9 +14,9 @@
 
             <p>Price: {{ $product->price }}</p>
 
-            <p>Category: {{ $product->category->name }}</p>
+                <p>Category: {{ $product->category?->name ?? 'No Category' }}</p>
 
-            <p>Suppliers: {{ $product->suppliers->pluck('name')->join(', ') }}</p>
+            <p>Suppliers: {{ $product->suppliers->pluck('name')->join(', ') ?: 'No Suppliers' }}</p>
 
             <a href="{{ route('products.show', $product->id) }}">
                 View Details
