@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\StoreSupplierRequest;
 
 class ProductController extends Controller
 {
@@ -14,19 +16,24 @@ class ProductController extends Controller
     {
         $products = Product::with(['category', 'suppliers'])->get();
 
-        return view('products.index', [
-            'products' => $products
-        ]);
+        return view('products.index', compact('products'));
     }
 
-    // Display one product
-    public function show($id)
+    // Show create product form
+    public function create()
     {
-        $product = Product::findOrFail($id);
+        $categories = Category::all();
 
-        return view('products.show', [
-            'product' => $product
-        ]);
+        return view('products.create', compact('categories'));
+    }
+
+    // Store new product
+    public function store(StoreProductRequest $request)
+    {
+        Product::create($request->validated());
+
+        return redirect()->route('products.index')
+            ->with('success', 'Product added!');
     }
 
     // Display low stock products
@@ -37,34 +44,18 @@ class ProductController extends Controller
             ->orderBy('stock')
             ->get();
 
-        return view('products.low-stock', [
-            'products' => $products
-        ]);
+        return view('products.low-stock', compact('products'));
     }
 
-    // Display create product form
-    public function create()
+    // Display single product
+    public function show($id)
     {
-        $categories = Category::all();
+        $product = Product::with([
+            'category',
+            'suppliers',
+            'detail'
+        ])->findOrFail($id);
 
-        return view('products.create', [
-            'categories' => $categories
-        ]);
-    }
-
-    // Store new product
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'stock'       => 'required|integer|min:0',
-            'price'       => 'required|numeric|min:0',
-        ]);
-
-        Product::create($validated);
-
-        return redirect()->route('products.index')
-            ->with('success', 'Product added!');
+        return view('products.show', compact('product'));
     }
 }
