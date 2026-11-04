@@ -2,54 +2,54 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\LogVisit;
 
-// Inventory
-Route::get('/inventory', function () {
-    return 'Inventory System';
+
+// Login routes
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+
+    Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
 });
 
-// Products
-Route::get('/products', [ProductController::class, 'index'])
-    ->name('products.index');
 
-Route::get('/products/low-stock', [ProductController::class, 'lowStock'])
-    ->name('products.low-stock');
+// Protected routes with LogVisit middleware
+Route::middleware(['auth', LogVisit::class])->group(function () {
 
-Route::get('/products/create', [ProductController::class, 'create'])
-    ->name('products.create');
+    // Logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::post('/products', [ProductController::class, 'store'])
-    ->name('products.store');
+    // Products
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
-Route::get('/products/{id}', [ProductController::class, 'show'])
-    ->name('products.show');
+    Route::get('/products/low-stock', [ProductController::class, 'lowStock'])->name('products.low-stock');
 
-// Test layout
-Route::get('/test-layout', function () {
-    return view('layouts.app');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
+
+    // Categories
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+
+
+    // Suppliers
+    Route::get('/suppliers', [SuppliersController::class, 'index'])->name('suppliers.index');
+
+    Route::get('/suppliers/{id}', [SuppliersController::class, 'show'])->name('suppliers.show');
+
+
+    // Stock Summary
+    Route::get('/stock-summary', [StockController::class, 'summary'])->name('stock.summary');
+
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 });
-
-// Suppliers
-Route::get('/suppliers', [SuppliersController::class, 'index'])
-    ->name('suppliers.index');
-
-Route::get('/suppliers/create', [SuppliersController::class, 'create'])
-    ->name('suppliers.create');
-
-Route::post('/suppliers', [SuppliersController::class, 'store'])
-    ->name('suppliers.store');
-
-Route::get('/suppliers/{id}', [SuppliersController::class, 'show'])
-    ->name('suppliers.show');
-
-// Categories
-Route::get('/categories', [CategoryController::class, 'index'])
-    ->name('categories.index');
-
-// Stock Summary
-Route::get('/stock-summary', [StockController::class, 'summary'])
-    ->name('stock.summary');
