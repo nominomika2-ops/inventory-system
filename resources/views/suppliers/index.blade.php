@@ -4,8 +4,16 @@
 @section('title', 'Suppliers List')
 
 @section('content')
+
     <div class="container mt-4">
+
         <h1>Suppliers List</h1>
+
+        @can('manage-products')
+            <a href="{{ route('suppliers.create') }}" class="btn btn-primary mb-3">
+                Add Supplier
+            </a>
+        @endcan
 
         <table class="table table-bordered">
             <thead>
@@ -22,9 +30,13 @@
                 @forelse ($suppliers as $supplier)
                     <tr>
                         <td>{{ $supplier->id }}</td>
+
                         <td>{{ $supplier->name }}</td>
+
                         <td>{{ $supplier->email ?? 'Email not available' }}</td>
+
                         <td>{{ $supplier->phone ?? 'Phone not available' }}</td>
+
                         <td>
                             <a href="{{ route('suppliers.show', $supplier->id) }}">
                                 View Details
@@ -38,5 +50,7 @@
                 @endforelse
             </tbody>
         </table>
+
     </div>
+
 @endsection

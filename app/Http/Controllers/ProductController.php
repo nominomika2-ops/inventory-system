@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\StoreSupplierRequest;
 
 class ProductController extends Controller
 {
@@ -33,7 +31,7 @@ class ProductController extends Controller
         Product::create($request->validated());
 
         return redirect()->route('products.index')
-            ->with('success', 'Product added!');
+            ->with('success', 'Product added successfully!');
     }
 
     // Display low stock products

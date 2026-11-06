@@ -1,4 +1,4 @@
-blade
+TOM
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,12 +10,13 @@ blade
     <h1>Inventory System</h1>
 
     <nav>
-        <a href="{{ route('products.index') }}">Products</a> |
-        <a href="{{ route('categories.index') }}">Categories</a> |
-        <a href="{{ route('suppliers.index') }}">Suppliers</a> |
-        <a href="{{ route('products.low-stock') }}">Low Stock</a>
-        <a href="{{ route('stock.summary') }}">Stock Summary</a>
-    </nav>
+       <a href="{{ route('products.index') }}">Products</a> |
+<a href="{{ route('categories.index') }}">Categories</a> |
+<a href="{{ route('suppliers.index') }}">Suppliers</a> |
+<a href="{{ route('products.low-stock') }}">Low Stock</a> |
+<a href="{{ route('stock.summary') }}">Stock Summary</a> |
+<a href="{{ route('profile') }}">Profile</a>
+</nav>
 
     <hr>
 

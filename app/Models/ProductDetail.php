@@ -2,28 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Product;
 
 class ProductDetail extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'product_id',
         'barcode',
         'description',
     ];
 
+    // Product Detail belongs to one Product
     public function product()
     {
         return $this->belongsTo(Product::class);
-    
     }
-    
-public function detail()
-{
-    return $this->hasOne(ProductDetail::class);
-}
-
 }

@@ -8,16 +8,16 @@ class StoreProductRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('manage-products');
     }
 
     public function rules(): array
     {
         return [
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'stock'       => 'required|integer|min:0',
-            'price'       => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:0',
         ];
     }
 
@@ -30,10 +30,11 @@ class StoreProductRequest extends FormRequest
             'price.numeric' => 'Price must be a number.',
         ];
     }
+
     public function attributes(): array
-{
-    return [
-        'price' => 'product price',
-    ];
-}
+    {
+        return [
+            'price' => 'product price',
+        ];
+    }
 }
