@@ -1,122 +1,110 @@
 
 @extends('layouts.app')
 
-@section('title', 'Add Product')
-
 @section('content')
 
-    <div class="container mt-4">
+<div class="container">
 
-        <h1>Add Product</h1>
+    <h2>Add New Product</h2>
 
-        <form action="{{ route('products.store') }}" method="POST">
+    <form action="{{ route('products.store') }}"
+          method="POST"
+          enctype="multipart/form-data">
 
-            @csrf
+        @csrf
 
-            {{-- Product Name --}}
-            <div class="mb-3">
+        <!-- Product Name -->
+        <div class="mb-3">
+            <label class="form-label">Product Name</label>
 
-                <label class="form-label">Name</label>
+            <input type="text"
+                   name="name"
+                   value="{{ old('name') }}"
+                   class="form-control @error('name') is-invalid @enderror">
 
-                <input
-                    type="text"
-                    name="name"
-                    value="{{ old('name') }}"
-                    class="form-control @error('name') is-invalid @enderror"
-                >
+            @error('name')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
-                @error('name')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+        <!-- Category -->
+        <div class="mb-3">
+            <label class="form-label">Category</label>
 
-            </div>
+            <select name="category_id"
+                    class="form-control @error('category_id') is-invalid @enderror">
 
-            {{-- Category --}}
-            <div class="mb-3">
+                <option value="">Select Category</option>
 
-                <label class="form-label">Category</label>
+                @foreach($categories as $category)
 
-                <select
-                    name="category_id"
-                    class="form-select @error('category_id') is-invalid @enderror"
-                >
+                    <option value="{{ $category->id }}"
+                        {{ old('category_id') == $category->id ? 'selected' : '' }}>
 
-                    <option value="">-- Select --</option>
+                        {{ $category->name }}
 
-                    @foreach ($categories as $category)
+                    </option>
 
-                        <option
-                            value="{{ $category->id }}"
-                            {{ old('category_id') == $category->id ? 'selected' : '' }}
-                        >
-                            {{ $category->name }}
-                        </option>
+                @endforeach
 
-                    @endforeach
+            </select>
 
-                </select>
+            @error('category_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
-                @error('category_id')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+        <!-- Price -->
+        <div class="mb-3">
+            <label class="form-label">Price</label>
 
-            </div>
+            <input type="number"
+                   step="0.01"
+                   name="price"
+                   value="{{ old('price') }}"
+                   class="form-control @error('price') is-invalid @enderror">
 
-            {{-- Stock --}}
-            <div class="mb-3">
+            @error('price')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
-                <label class="form-label">Stock</label>
+        <!-- Stock -->
+        <div class="mb-3">
+            <label class="form-label">Stock</label>
 
-                <input
-                    type="number"
-                    name="stock"
-                    value="{{ old('stock') }}"
-                    class="form-control @error('stock') is-invalid @enderror"
-                >
+            <input type="number"
+                   name="stock"
+                   value="{{ old('stock') }}"
+                   class="form-control @error('stock') is-invalid @enderror">
 
-                @error('stock')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+            @error('stock')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
-            </div>
+        <!-- Product Image -->
+        <div class="mb-3">
 
-            {{-- Price --}}
-            <div class="mb-3">
+            <label class="form-label">Image (optional)</label>
 
-                <label class="form-label">Price</label>
+            <input type="file"
+                   name="image"
+                   class="form-control @error('image') is-invalid @enderror">
 
-                <input
-                    type="text"
-                    name="price"
-                    value="{{ old('price') }}"
-                    class="form-control @error('price') is-invalid @enderror"
-                >
+            @error('image')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
 
-                @error('price')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+        </div>
 
-            </div>
+        <!-- Save Button -->
+        <button type="submit" class="btn btn-primary">
+            Save Product
+        </button>
 
-            <button type="submit" class="btn btn-primary">
-                Save
-            </button>
+    </form>
 
-            <a href="{{ route('products.index') }}"
-               class="btn btn-secondary">
-                Cancel
-            </a>
-
-        </form>
-
-    </div>
+</div>
 
 @endsection

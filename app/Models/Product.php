@@ -10,11 +10,12 @@ use App\Models\ProductDetail;
 class Product extends Model
 {
     protected $fillable = [
-        'name',
-        'category_id',
-        'stock',
-        'price',
-    ];
+    'name',
+    'category_id',
+    'stock',
+    'price',
+    'image',
+];
 
     // One Product belongs to one Category
     public function category()

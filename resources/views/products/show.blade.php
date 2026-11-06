@@ -23,6 +23,25 @@
 
         <hr>
 
+        <h3>Product Image</h3>
+
+        @if ($product->image)
+
+            <img
+                src="{{ asset('storage/' . $product->image) }}"
+                width="200"
+                class="mb-3"
+                alt="Product Image"
+            >
+
+        @else
+
+            <p class="text-muted">No image</p>
+
+        @endif
+
+        <hr>
+
         <h3>Product Additional Details</h3>
 
         @if ($product->detail)

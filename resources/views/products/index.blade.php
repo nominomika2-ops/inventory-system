@@ -5,37 +5,65 @@
 
 @section('content')
 
-    <h2>Products List</h2>
+    <div class="container mt-4">
 
-    @can('manage-products')
-        <a href="{{ route('products.create') }}" class="btn btn-primary">
-            Add Product
-        </a>
-    @endcan
+        <h2>Products List</h2>
 
-    <br><br>
-
-    @foreach ($products as $product)
-        <div>
-            <h3>{{ $product->name }}</h3>
-
-            <p>Stock: {{ $product->stock }}</p>
-
-            <p>Price: {{ $product->price }}</p>
-
-            <p>Category: {{ $product->category?->name ?? 'No Category' }}</p>
-
-            <p>
-                Suppliers:
-                {{ $product->suppliers->pluck('name')->join(', ') ?: 'No Suppliers' }}
-            </p>
-
-            <a href="{{ route('products.show', $product->id) }}">
-                View Details
+        @can('manage-products')
+            <a href="{{ route('products.create') }}" class="btn btn-primary">
+                Add Product
             </a>
-        </div>
+        @endcan
 
-        <hr>
-    @endforeach
+        <br><br>
+
+        @foreach ($products as $product)
+
+            <div>
+
+                <h3>{{ $product->name }}</h3>
+
+                <!-- Product Image Thumbnail -->
+                @if ($product->image)
+
+                    <img
+                        src="{{ asset('storage/' . $product->image) }}"
+                        width="50"
+                        height="50"
+                        style="object-fit: cover;"
+                        alt="Product Image"
+                    >
+
+                @else
+
+                    <p class="text-muted">No image</p>
+
+                @endif
+
+                <p>Stock: {{ $product->stock }}</p>
+
+                <p>Price: {{ $product->price }}</p>
+
+                <p>
+                    Category:
+                    {{ $product->category?->name ?? 'No Category' }}
+                </p>
+
+                <p>
+                    Suppliers:
+                    {{ $product->suppliers->pluck('name')->join(', ') ?: 'No Suppliers' }}
+                </p>
+
+                <a href="{{ route('products.show', $product->id) }}">
+                    View Details
+                </a>
+
+            </div>
+
+            <hr>
+
+        @endforeach
+
+    </div>
 
 @endsection

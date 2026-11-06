@@ -25,10 +25,19 @@ class ProductController extends Controller
         return view('products.create', compact('categories'));
     }
 
-    // Store new product
+    // Store new product with image
     public function store(StoreProductRequest $request)
     {
-        Product::create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+
+            $data['image'] = $request->file('image')
+                ->store('products', 'public');
+
+        }
+
+        Product::create($data);
 
         return redirect()->route('products.index')
             ->with('success', 'Product added successfully!');
