@@ -20,7 +20,7 @@
 
             @auth
 
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center flex-wrap">
 
                     <a href="{{ route('products.index') }}"
                        class="text-white me-3">
@@ -41,6 +41,13 @@
                        class="text-white me-3">
                         Low Stock
                     </a>
+
+                    @can('manage-products')
+                        <a href="{{ route('users.index') }}"
+                           class="text-white me-3">
+                            Users
+                        </a>
+                    @endcan
 
                     <span class="text-white me-3">
                         {{ auth()->user()->name }}
@@ -66,6 +73,18 @@
     </nav>
 
     <div class="container mt-4">
+
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
 
         @yield('content')
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 
 use App\Http\Middleware\LogVisit;
 use App\Http\Middleware\EnsureUserIsAdmin;
@@ -48,14 +49,31 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
         ->name('products.low-stock');
 
 
-    // Admin-only Product Create and Store
+    // Admin-only routes
     Route::middleware(EnsureUserIsAdmin::class)->group(function () {
 
+        // Product Create and Store
         Route::get('/products/create', [ProductController::class, 'create'])
             ->name('products.create');
 
         Route::post('/products', [ProductController::class, 'store'])
             ->name('products.store');
+
+
+        // Category Admin Routes
+        Route::resource('categories', CategoryController::class)
+            ->except(['index', 'show']);
+
+
+        // User Admin Routes
+        Route::get('/users', [UserController::class, 'index'])
+            ->name('users.index');
+
+        Route::get('/users/create', [UserController::class, 'create'])
+            ->name('users.create');
+
+        Route::post('/users', [UserController::class, 'store'])
+            ->name('users.store');
 
     });
 
@@ -65,9 +83,9 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
         ->name('products.show');
 
 
-    // Categories
-    Route::get('/categories', [CategoryController::class, 'index'])
-        ->name('categories.index');
+    // Categories - All authenticated users can view
+    Route::resource('categories', CategoryController::class)
+        ->only(['index']);
 
 
     // Suppliers
