@@ -98,6 +98,45 @@
 
         </div>
 
+        <!-- Suppliers -->
+        <div class="mb-3">
+
+            <label class="form-label">Suppliers</label>
+
+            @foreach ($suppliers as $supplier)
+
+                <div class="form-check">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="suppliers[]"
+                        value="{{ $supplier->id }}"
+                        id="s{{ $supplier->id }}"
+                        {{ in_array($supplier->id, old('suppliers', [])) ? 'checked' : '' }}
+                    >
+
+                    <label
+                        class="form-check-label"
+                        for="s{{ $supplier->id }}"
+                    >
+                        {{ $supplier->name }}
+                    </label>
+
+                </div>
+
+            @endforeach
+
+            @error('suppliers')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+
+            @error('suppliers.*')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+
+        </div>
+
         <!-- Save Button -->
         <button type="submit" class="btn btn-primary">
             Save Product

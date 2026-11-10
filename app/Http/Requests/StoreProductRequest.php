@@ -23,6 +23,10 @@ class StoreProductRequest extends FormRequest
             'stock' => 'required|integer|min:0',
 
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'suppliers' => 'nullable|array',
+
+            'suppliers.*' => 'exists:suppliers,id',
         ];
     }
 

@@ -41,12 +41,17 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
         ->name('logout');
 
 
-    // Products
+    // Products - All authenticated users
     Route::get('/products', [ProductController::class, 'index'])
         ->name('products.index');
 
     Route::get('/products/low-stock', [ProductController::class, 'lowStock'])
         ->name('products.low-stock');
+
+
+    // Stock In and Stock Out - Admin and Staff
+    Route::post('/products/{id}/stock', [StockController::class, 'adjust'])
+        ->name('products.stock');
 
 
     // Admin-only routes
@@ -58,6 +63,17 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
 
         Route::post('/products', [ProductController::class, 'store'])
             ->name('products.store');
+
+
+        // Product Edit, Update and Delete
+        Route::get('/products/{id}/edit', [ProductController::class, 'edit'])
+            ->name('products.edit');
+
+        Route::put('/products/{id}', [ProductController::class, 'update'])
+            ->name('products.update');
+
+        Route::delete('/products/{id}', [ProductController::class, 'destroy'])
+            ->name('products.destroy');
 
 
         // Category Admin Routes
@@ -75,6 +91,14 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
         Route::post('/users', [UserController::class, 'store'])
             ->name('users.store');
 
+
+        // Supplier Create and Store
+        Route::get('/suppliers/create', [SuppliersController::class, 'create'])
+            ->name('suppliers.create');
+
+        Route::post('/suppliers', [SuppliersController::class, 'store'])
+            ->name('suppliers.store');
+
     });
 
 
@@ -88,7 +112,7 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
         ->only(['index']);
 
 
-    // Suppliers
+    // Suppliers - All authenticated users can view
     Route::get('/suppliers', [SuppliersController::class, 'index'])
         ->name('suppliers.index');
 
