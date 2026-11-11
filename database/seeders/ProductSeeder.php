@@ -10,7 +10,7 @@ class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        $count = 20;
+        $count = 35;
 
         Product::factory()
             ->count($count - 5)
@@ -25,9 +25,13 @@ class ProductSeeder extends Seeder
         $suppliers = Supplier::all();
 
         Product::all()->each(function ($product) use ($suppliers) {
-            $product->suppliers()->attach(
-                $suppliers->random(rand(1, 3))->pluck('id')
-            );
+
+            $randomSuppliers = $suppliers
+                ->random(min(rand(1, 3), $suppliers->count()))
+                ->pluck('id');
+
+            $product->suppliers()->sync($randomSuppliers);
+
         });
     }
 }

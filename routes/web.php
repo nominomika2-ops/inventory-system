@@ -10,6 +10,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 
 use App\Http\Middleware\LogVisit;
 use App\Http\Middleware\EnsureUserIsAdmin;
@@ -36,12 +37,16 @@ Route::middleware('guest')->group(function () {
 // Protected routes
 Route::middleware(['auth', LogVisit::class])->group(function () {
 
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
 
 
-    // Products - All authenticated users
+    // Products
     Route::get('/products', [ProductController::class, 'index'])
         ->name('products.index');
 
@@ -49,7 +54,7 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
         ->name('products.low-stock');
 
 
-    // Stock In and Stock Out - Admin and Staff
+    // Stock In and Stock Out
     Route::post('/products/{id}/stock', [StockController::class, 'adjust'])
         ->name('products.stock');
 
@@ -107,12 +112,12 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
         ->name('products.show');
 
 
-    // Categories - All authenticated users can view
+    // Categories
     Route::resource('categories', CategoryController::class)
         ->only(['index']);
 
 
-    // Suppliers - All authenticated users can view
+    // Suppliers
     Route::get('/suppliers', [SuppliersController::class, 'index'])
         ->name('suppliers.index');
 

@@ -3,16 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreSupplierRequest;
 
 class SuppliersController extends Controller
 {
-    // Display all suppliers
-    public function index()
+    // Display suppliers with search, city filter and pagination
+    public function index(Request $request)
     {
-        $suppliers = Supplier::all();
+        $query = Supplier::query();
 
-        return view('suppliers.index', compact('suppliers'));
+        // Search by supplier name or city
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('city', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Filter by city
+        if ($request->filled('city')) {
+            $query->where('city', $request->city);
+        }
+
+        // Get suppliers with pagination
+        $suppliers = $query
+            ->orderBy('name')
+            ->paginate(10)
+            ->withQueryString();
+
+        // Get available cities for dropdown
+        $cities = Supplier::whereNotNull('city')
+            ->where('city', '!=', '')
+            ->distinct()
+            ->orderBy('city')
+            ->pluck('city');
+
+        return view('suppliers.index', compact('suppliers', 'cities'));
     }
 
     // Show create supplier form

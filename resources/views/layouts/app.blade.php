@@ -14,7 +14,8 @@
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
 
-            <a class="navbar-brand" href="{{ route('products.index') }}">
+            {{-- Brand --}}
+            <a class="navbar-brand" href="{{ route('dashboard') }}">
                 Inventory System
             </a>
 
@@ -22,26 +23,37 @@
 
                 <div class="d-flex align-items-center flex-wrap">
 
+                    {{-- Dashboard --}}
+                    <a href="{{ route('dashboard') }}"
+                       class="text-white me-3">
+                        Dashboard
+                    </a>
+
+                    {{-- Products --}}
                     <a href="{{ route('products.index') }}"
                        class="text-white me-3">
                         Products
                     </a>
 
+                    {{-- Categories --}}
                     <a href="{{ route('categories.index') }}"
                        class="text-white me-3">
                         Categories
                     </a>
 
+                    {{-- Suppliers --}}
                     <a href="{{ route('suppliers.index') }}"
                        class="text-white me-3">
                         Suppliers
                     </a>
 
+                    {{-- Low Stock --}}
                     <a href="{{ route('products.low-stock') }}"
                        class="text-white me-3">
                         Low Stock
                     </a>
 
+                    {{-- Users - Admin Only --}}
                     @can('manage-products')
                         <a href="{{ route('users.index') }}"
                            class="text-white me-3">
@@ -49,10 +61,12 @@
                         </a>
                     @endcan
 
+                    {{-- Logged-in User --}}
                     <span class="text-white me-3">
                         {{ auth()->user()->name }}
                     </span>
 
+                    {{-- Logout --}}
                     <form action="{{ route('logout') }}"
                           method="POST"
                           class="d-inline">

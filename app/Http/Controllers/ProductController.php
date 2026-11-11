@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Supplier;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProductRequest;
@@ -12,12 +13,49 @@ use App\Http\Requests\UpdateProductRequest;
 
 class ProductController extends Controller
 {
-    // Display all products
-    public function index()
+    // Display products with search, filter and pagination
+    public function index(Request $request)
     {
-        $products = Product::with(['category', 'suppliers'])->get();
+        $query = Product::with(['category', 'suppliers']);
 
-        return view('products.index', compact('products'));
+        // Search by product name
+        if ($request->filled('search')) {
+            $query->where(
+                'name',
+                'like',
+                '%' . $request->search . '%'
+            );
+        }
+
+        // Filter by category
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Filter by stock status
+        if ($request->stock === 'low') {
+            $query->where(
+                'stock',
+                '<',
+                config('inventory.low_stock_limit')
+            );
+        } elseif ($request->stock === 'out') {
+            $query->where('stock', 0);
+        }
+
+        // Pagination
+        $products = $query
+            ->orderBy('name')
+            ->paginate(10)
+            ->withQueryString();
+
+        // Get categories for dropdown
+        $categories = Category::orderBy('name')->get();
+
+        return view('products.index', compact(
+            'products',
+            'categories'
+        ));
     }
 
     // Show create product form
@@ -26,7 +64,10 @@ class ProductController extends Controller
         $categories = Category::orderBy('name')->get();
         $suppliers = Supplier::orderBy('name')->get();
 
-        return view('products.create', compact('categories', 'suppliers'));
+        return view('products.create', compact(
+            'categories',
+            'suppliers'
+        ));
     }
 
     // Store new product with image and suppliers
@@ -43,6 +84,7 @@ class ProductController extends Controller
         }
 
         $product = Product::create($data);
+
         $product->suppliers()->sync($suppliers);
 
         return redirect()->route('products.index')
@@ -103,6 +145,7 @@ class ProductController extends Controller
         }
 
         $product->update($data);
+
         $product->suppliers()->sync($suppliers);
 
         return redirect()
@@ -127,4 +170,3 @@ class ProductController extends Controller
             ->with('success', 'Product deleted!');
     }
 }
-

@@ -23,11 +23,13 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->route('products.index');
+            return redirect()->route('dashboard');
         }
 
         return back()
-            ->withErrors(['email' => 'Wrong email or password.'])
+            ->withErrors([
+                'email' => 'Wrong email or password.'
+            ])
             ->onlyInput('email');
     }
 
