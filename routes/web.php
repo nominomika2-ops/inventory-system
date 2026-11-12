@@ -17,13 +17,13 @@ use App\Http\Middleware\LogVisit;
 use App\Http\Middleware\EnsureUserIsAdmin;
 
 
-// Home route
+// Home Route
 Route::get('/', function () {
     return redirect()->route('login');
-});
+})->name('home');
 
 
-// Login routes
+// Login Routes
 Route::middleware('guest')->group(function () {
 
     Route::get('/login', [AuthController::class, 'showLogin'])
@@ -35,19 +35,20 @@ Route::middleware('guest')->group(function () {
 });
 
 
-// Protected routes
+// Protected Routes
 Route::middleware(['auth', LogVisit::class])->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
+
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
 
 
-    // Products
+    // Products - View
     Route::get('/products', [ProductController::class, 'index'])
         ->name('products.index');
 
@@ -56,6 +57,7 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
 
 
     // Stock In and Stock Out
+    // Both Admin and Staff can access
     Route::post('/products/{id}/stock', [StockController::class, 'adjust'])
         ->name('products.stock');
 
@@ -74,34 +76,36 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
         ->name('reports.top-products');
 
 
-    // Admin-only routes
+    // Admin Only Routes
     Route::middleware(EnsureUserIsAdmin::class)->group(function () {
 
-        // Product Create and Store
+        // Product Create
         Route::get('/products/create', [ProductController::class, 'create'])
             ->name('products.create');
 
+        // Product Store
         Route::post('/products', [ProductController::class, 'store'])
             ->name('products.store');
 
-
-        // Product Edit, Update and Delete
+        // Product Edit
         Route::get('/products/{id}/edit', [ProductController::class, 'edit'])
             ->name('products.edit');
 
+        // Product Update
         Route::put('/products/{id}', [ProductController::class, 'update'])
             ->name('products.update');
 
+        // Product Delete
         Route::delete('/products/{id}', [ProductController::class, 'destroy'])
             ->name('products.destroy');
 
 
-        // Category Admin Routes
+        // Category Create, Store, Edit, Update, Delete
         Route::resource('categories', CategoryController::class)
             ->except(['index', 'show']);
 
 
-        // User Admin Routes
+        // User Management
         Route::get('/users', [UserController::class, 'index'])
             ->name('users.index');
 
@@ -127,12 +131,12 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
         ->name('products.show');
 
 
-    // Categories
+    // Categories List
     Route::resource('categories', CategoryController::class)
         ->only(['index']);
 
 
-    // Suppliers
+    // Suppliers List
     Route::get('/suppliers', [SuppliersController::class, 'index'])
         ->name('suppliers.index');
 
