@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
 
 use App\Http\Middleware\LogVisit;
 use App\Http\Middleware\EnsureUserIsAdmin;
@@ -57,6 +58,20 @@ Route::middleware(['auth', LogVisit::class])->group(function () {
     // Stock In and Stock Out
     Route::post('/products/{id}/stock', [StockController::class, 'adjust'])
         ->name('products.stock');
+
+
+    // Reports
+    Route::get('/reports', [ReportController::class, 'index'])
+        ->name('reports.index');
+
+    Route::get('/reports/stock-value', [ReportController::class, 'stockValue'])
+        ->name('reports.stock-value');
+
+    Route::get('/reports/movements', [ReportController::class, 'movements'])
+        ->name('reports.movements');
+
+    Route::get('/reports/top-products', [ReportController::class, 'topProducts'])
+        ->name('reports.top-products');
 
 
     // Admin-only routes

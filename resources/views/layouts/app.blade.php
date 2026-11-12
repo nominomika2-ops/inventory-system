@@ -53,6 +53,12 @@
                         Low Stock
                     </a>
 
+                    {{-- Reports --}}
+                    <a href="{{ route('reports.index') }}"
+                       class="text-white me-3">
+                        Reports
+                    </a>
+
                     {{-- Users - Admin Only --}}
                     @can('manage-products')
                         <a href="{{ route('users.index') }}"
