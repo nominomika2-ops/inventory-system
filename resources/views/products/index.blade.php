@@ -7,7 +7,7 @@
 
 <div class="container mt-4">
 
-    <h2>Products List</h2>
+    <h2>Inventory Products</h2>
 
     @can('manage-products')
         <a href="{{ route('products.create') }}" class="btn btn-primary mb-3">
