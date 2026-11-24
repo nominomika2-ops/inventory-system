@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 
@@ -16,30 +17,42 @@ class ProductController extends Controller
     // Display products with search, filter and pagination
     public function index(Request $request)
     {
+        // Validate search and filter inputs
+        $filters = $request->validate([
+            'search' => 'nullable|string|max:255',
+
+            'category_id' => 'nullable|integer|exists:categories,id',
+
+            'stock' => [
+                'nullable',
+                Rule::in(['low', 'out']),
+            ],
+        ]);
+
+        // Remove unnecessary spaces from search
+        $search = trim($filters['search'] ?? '');
+
+        // Start product query
         $query = Product::with(['category', 'suppliers']);
 
         // Search by product name
-        if ($request->filled('search')) {
-            $query->where(
-                'name',
-                'like',
-                '%' . $request->search . '%'
-            );
+        if ($search !== '') {
+            $query->where('name', 'like', '%' . $search . '%');
         }
 
         // Filter by category
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
+        if (!empty($filters['category_id'])) {
+            $query->where('category_id', $filters['category_id']);
         }
 
         // Filter by stock status
-        if ($request->stock === 'low') {
+        if (($filters['stock'] ?? null) === 'low') {
             $query->where(
                 'stock',
                 '<',
                 config('inventory.low_stock_limit')
             );
-        } elseif ($request->stock === 'out') {
+        } elseif (($filters['stock'] ?? null) === 'out') {
             $query->where('stock', 0);
         }
 
