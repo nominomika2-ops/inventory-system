@@ -7,7 +7,19 @@
 
 <div class="container mt-4">
 
-    <h2>Products List</h2>
+    <h2>Inventory Products</h2>
+    {{-- Validation Errors --}}
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <strong>Please correct the following errors:</strong>
+
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
     @can('manage-products')
         <a href="{{ route('products.create') }}" class="btn btn-primary mb-3">
