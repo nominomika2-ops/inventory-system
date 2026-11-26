@@ -4,111 +4,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - Inventory System</title>
+
+    <title>@yield('title', 'Dashboard') - Inventory System</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 </head>
 
 <body>
 
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
+@auth
 
-            {{-- Brand --}}
-            <a class="navbar-brand" href="{{ route('dashboard') }}">
-                Inventory System
+<div class="app-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <span>Inventory System</span>
+        </div>
+
+        <div class="sidebar-label">MAIN MENU</div>
+
+        <nav class="sidebar-menu">
+
+            <a href="{{ route('dashboard') }}"
+               class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
             </a>
 
-            @auth
+            <a href="{{ route('products.index') }}"
+               class="sidebar-link {{ request()->routeIs('products.*') ? 'active' : '' }}">
+                <i class="bi bi-box"></i>
+                <span>Products</span>
+            </a>
 
-                <div class="d-flex align-items-center flex-wrap">
+            <a href="{{ route('categories.index') }}"
+               class="sidebar-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                <i class="bi bi-tags"></i>
+                <span>Categories</span>
+            </a>
 
-                    {{-- Dashboard --}}
-                    <a href="{{ route('dashboard') }}"
-                       class="text-white me-3">
-                        Dashboard
-                    </a>
+            <a href="{{ route('suppliers.index') }}"
+               class="sidebar-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
+                <i class="bi bi-truck"></i>
+                <span>Suppliers</span>
+            </a>
 
-                    {{-- Products --}}
-                    <a href="{{ route('products.index') }}"
-                       class="text-white me-3">
-                        Products
-                    </a>
+            <a href="{{ route('products.low-stock') }}"
+               class="sidebar-link {{ request()->routeIs('products.low-stock') ? 'active' : '' }}">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span>Low Stock</span>
+            </a>
 
-                    {{-- Categories --}}
-                    <a href="{{ route('categories.index') }}"
-                       class="text-white me-3">
-                        Categories
-                    </a>
+            <div class="sidebar-label mt-4">MANAGEMENT</div>
 
-                    {{-- Suppliers --}}
-                    <a href="{{ route('suppliers.index') }}"
-                       class="text-white me-3">
-                        Suppliers
-                    </a>
+            <a href="{{ route('reports.index') }}"
+               class="sidebar-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+                <i class="bi bi-bar-chart"></i>
+                <span>Reports</span>
+            </a>
 
-                    {{-- Low Stock --}}
-                    <a href="{{ route('products.low-stock') }}"
-                       class="text-white me-3">
-                        Low Stock
-                    </a>
+            @can('manage-products')
+                <a href="{{ route('users.index') }}"
+                   class="sidebar-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                    <i class="bi bi-people"></i>
+                    <span>Users</span>
+                </a>
+            @endcan
 
-                    {{-- Reports --}}
-                    <a href="{{ route('reports.index') }}"
-                       class="text-white me-3">
-                        Reports
-                    </a>
+        </nav>
 
-                    {{-- Users - Admin Only --}}
-                    @can('manage-products')
-                        <a href="{{ route('users.index') }}"
-                           class="text-white me-3">
-                            Users
-                        </a>
-                    @endcan
+        <div class="sidebar-bottom">
+            <div class="user-avatar">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+            </div>
 
-                    {{-- Logged-in User --}}
-                    <span class="text-white me-3">
-                        {{ auth()->user()->name }}
-                    </span>
+            <div class="user-info">
+                <strong>{{ auth()->user()->name }}</strong>
+                <small>{{ auth()->user()->role }}</small>
+            </div>
 
-                    {{-- Logout --}}
-                    <form action="{{ route('logout') }}"
-                          method="POST"
-                          class="d-inline">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-icon" title="Logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </form>
+        </div>
 
-                        @csrf
+    </aside>
 
-                        <button class="btn btn-outline-light btn-sm">
-                            Logout
-                        </button>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
 
-                    </form>
+        <header class="topbar">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
 
+            <div>
+                <h5>@yield('title', 'Dashboard')</h5>
+                <small>Inventory Management System</small>
+            </div>
+
+            <div class="topbar-right">
+                <span class="online-dot"></span>
+                <span>Welcome, {{ auth()->user()->name }}</span>
+            </div>
+        </header>
+
+        <div class="page-content">
+
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
+            @endif
 
-            @endauth
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @yield('content')
 
         </div>
-    </nav>
 
-    <div class="container mt-4">
+        <footer class="footer">
+            © {{ date('Y') }} Inventory System. All rights reserved.
+        </footer>
 
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+    </main>
 
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
+</div>
 
-        @yield('content')
+@else
 
-    </div>
+    <main class="guest-content">
+        <div class="guest-card">
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+
+            @yield('content')
+        </div>
+    </main>
+
+@endauth
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('show');
+    }
+</script>
 
 </body>
 </html>
